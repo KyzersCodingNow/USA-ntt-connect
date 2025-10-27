@@ -22,10 +22,10 @@ const wormholeConfig: config.WormholeConnectConfig = {
   },
   rpcs: {
     Solana: 'https://mainnet.helius-rpc.com/?api-key=',
-    Base: 'https://base-mainnet.g.alchemy.com/v2/',
-    Ethereum: 'https://eth-mainnet.g.alchemy.com/v2/',
-    Bsc: 'https://bnb-mainnet.g.alchemy.com/v2/',
-    Avalanche: 'https://avax-mainnet.g.alchemy.com/v2/',
+    Base: 'https://base-mainnet.g.alchemy.com/v2/-L5AwwQOAv8yWZ4cy2K5d',
+    Ethereum: 'https://eth-mainnet.g.alchemy.com/v2/-L5AwwQOAv8yWZ4cy2K5d',
+    Bsc: 'https://bnb-mainnet.g.alchemy.com/v2/-L5AwwQOAv8yWZ4cy2K5d',
+    Avalanche: 'https://avax-mainnet.g.alchemy.com/v2/-L5AwwQOAv8yWZ4cy2K5d',
   },
   routes: [
     ...nttRoutes({
