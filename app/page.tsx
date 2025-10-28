@@ -1,143 +1,115 @@
 "use client"
 
-import dynamic from "next/dynamic"
 import { ArrowRight, Shield, Zap, Globe } from "lucide-react"
 import Image from "next/image"
-import { useEffect, useRef, useState } from "react"
+import dynamic from "next/dynamic"
 
-const WormholeConnectWrapper = () => {
-  const [isClient, setIsClient] = useState(false)
-  const hasInitialized = useRef(false)
-
-  useEffect(() => {
-    // Only initialize once
-    if (!hasInitialized.current) {
-      hasInitialized.current = true
-      setIsClient(true)
-    }
-  }, [])
-
-  if (!isClient) {
-    return (
-      <div className="flex items-center justify-center p-12">
-        <div className="text-center">
-          <div className="mb-4 inline-block h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent"></div>
-          <p className="text-muted-foreground">Loading Bridge...</p>
-        </div>
+const WormholeConnect = dynamic(() => import("@wormhole-foundation/wormhole-connect"), {
+  ssr: false,
+  loading: () => (
+    <div className="flex items-center justify-center p-12">
+      <div className="text-center">
+        <div className="mb-4 inline-block h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent"></div>
+        <p className="text-muted-foreground">Loading Bridge...</p>
       </div>
-    )
-  }
+    </div>
+  ),
+})
 
-  // Dynamically import WormholeConnect only after client-side initialization
-  const WormholeConnect = dynamic(() => import("@wormhole-foundation/wormhole-connect"), {
-    ssr: false,
-    loading: () => (
-      <div className="flex items-center justify-center p-12">
-        <div className="text-center">
-          <div className="mb-4 inline-block h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent"></div>
-          <p className="text-muted-foreground">Initializing Bridge...</p>
-        </div>
-      </div>
-    ),
-  })
-
-  const wormholeConfig = {
-    network: "Mainnet",
-    chains: ["Solana", "Base", "Ethereum", "Bsc", "Avalanche"],
-    tokens: ["USA"],
-    ui: {
-      title: "USA Token Bridge",
-      defaultInputs: {
-        fromChain: "Solana",
-        toChain: "Base",
+const wormholeConfig = {
+  network: "Mainnet",
+  chains: ["Solana", "Base", "Ethereum", "Bsc", "Avalanche"],
+  tokens: ["USA"],
+  ui: {
+    title: "USA Token Bridge",
+    defaultInputs: {
+      fromChain: "Solana",
+      toChain: "Base",
+    },
+    disableUserInputtedTokens: true,
+  },
+  rpcs: {
+    Solana: "https://mainnet.helius-rpc.com/?api-key=",
+    Base: "https://base-mainnet.g.alchemy.com/v2/-L5AwwQOAv8yWZ4cy2K5d",
+    Ethereum: "https://eth-mainnet.g.alchemy.com/v2/-L5AwwQOAv8yWZ4cy2K5d",
+    Bsc: "https://bnb-mainnet.g.alchemy.com/v2/-L5AwwQOAv8yWZ4cy2K5d",
+    Avalanche: "https://avax-mainnet.g.alchemy.com/v2/-L5AwwQOAv8yWZ4cy2K5d",
+  },
+  tokensConfig: {
+    USA: {
+      key: "USA",
+      symbol: "USA",
+      nativeChain: "Solana",
+      tokenId: {
+        chain: "Solana",
+        address: "69kdRLyP5DTRkpHraaSZAQbWmAwzF9guKjZfzMXzcbAs",
       },
-      disableUserInputtedTokens: true,
+      icon: "https://magenta-obliged-skink-750.mypinata.cloud/ipfs/bafybeighe2vilqsdjdkuqcw22hfbavue4h2he4gxioaadh5dxxflqx3p4q",
+      decimals: 6,
+      color: "#DC2626",
     },
-    rpcs: {
-      Solana: "https://mainnet.helius-rpc.com/?api-key=",
-      Base: "https://base-mainnet.g.alchemy.com/v2/-L5AwwQOAv8yWZ4cy2K5d",
-      Ethereum: "https://eth-mainnet.g.alchemy.com/v2/-L5AwwQOAv8yWZ4cy2K5d",
-      Bsc: "https://bnb-mainnet.g.alchemy.com/v2/-L5AwwQOAv8yWZ4cy2K5d",
-      Avalanche: "https://avax-mainnet.g.alchemy.com/v2/-L5AwwQOAv8yWZ4cy2K5d",
-    },
-    tokensConfig: {
-      USA: {
-        key: "USA",
-        symbol: "USA",
-        nativeChain: "Solana",
-        tokenId: {
-          chain: "Solana",
-          address: "69kdRLyP5DTRkpHraaSZAQbWmAwzF9guKjZfzMXzcbAs",
+  },
+  nttGroups: {
+    USA_NTT: {
+      nttManagers: [
+        {
+          chainName: "Solana",
+          address: "NtTfQrAwS18E1sqsJKVw5gBf1oEeCrmNGZSWYEcepDX",
+          tokenKey: "USA",
+          transceivers: [
+            {
+              address: "52JduK4EXhb43LjAZQn52cW5pzxrhxzw1NUrQQmtFVmn",
+              type: "wormhole",
+            },
+          ],
         },
-        icon: "https://magenta-obliged-skink-750.mypinata.cloud/ipfs/bafybeighe2vilqsdjdkuqcw22hfbavue4h2he4gxioaadh5dxxflqx3p4q",
-        decimals: 6,
-        color: "#DC2626",
-      },
+        {
+          chainName: "Base",
+          address: "0x2804b30EF28C609565c3973A70fC3EB5802D354f",
+          tokenKey: "USA",
+          transceivers: [
+            {
+              address: "0x6DF7DA0eB91BcE55F57C076e44c702dF9b6f4261",
+              type: "wormhole",
+            },
+          ],
+        },
+        {
+          chainName: "Ethereum",
+          address: "0x97F162B82189648107690878950479bC29AC87Ea",
+          tokenKey: "USA",
+          transceivers: [
+            {
+              address: "0x0A223f36995e3f24541c4bB8F6d0Cc17247213b0",
+              type: "wormhole",
+            },
+          ],
+        },
+        {
+          chainName: "Bsc",
+          address: "0x2804b30EF28C609565c3973A70fC3EB5802D354f",
+          tokenKey: "USA",
+          transceivers: [
+            {
+              address: "0x6DF7DA0eB91BcE55F57C076e44c702dF9b6f4261",
+              type: "wormhole",
+            },
+          ],
+        },
+        {
+          chainName: "Avalanche",
+          address: "0x2804b30EF28C609565c3973A70fC3EB5802D354f",
+          tokenKey: "USA",
+          transceivers: [
+            {
+              address: "0x6DF7DA0eB91BcE55F57C076e44c702dF9b6f4261",
+              type: "wormhole",
+            },
+          ],
+        },
+      ],
     },
-    nttGroups: {
-      USA_NTT: {
-        nttManagers: [
-          {
-            chainName: "Solana",
-            address: "NtTfQrAwS18E1sqsJKVw5gBf1oEeCrmNGZSWYEcepDX",
-            tokenKey: "USA",
-            transceivers: [
-              {
-                address: "52JduK4EXhb43LjAZQn52cW5pzxrhxzw1NUrQQmtFVmn",
-                type: "wormhole",
-              },
-            ],
-          },
-          {
-            chainName: "Base",
-            address: "0x2804b30EF28C609565c3973A70fC3EB5802D354f",
-            tokenKey: "USA",
-            transceivers: [
-              {
-                address: "0x6DF7DA0eB91BcE55F57C076e44c702dF9b6f4261",
-                type: "wormhole",
-              },
-            ],
-          },
-          {
-            chainName: "Ethereum",
-            address: "0x97F162B82189648107690878950479bC29AC87Ea",
-            tokenKey: "USA",
-            transceivers: [
-              {
-                address: "0x0A223f36995e3f24541c4bB8F6d0Cc17247213b0",
-                type: "wormhole",
-              },
-            ],
-          },
-          {
-            chainName: "Bsc",
-            address: "0x2804b30EF28C609565c3973A70fC3EB5802D354f",
-            tokenKey: "USA",
-            transceivers: [
-              {
-                address: "0x6DF7DA0eB91BcE55F57C076e44c702dF9b6f4261",
-                type: "wormhole",
-              },
-            ],
-          },
-          {
-            chainName: "Avalanche",
-            address: "0x2804b30EF28C609565c3973A70fC3EB5802D354f",
-            tokenKey: "USA",
-            transceivers: [
-              {
-                address: "0x6DF7DA0eB91BcE55F57C076e44c702dF9b6f4261",
-                type: "wormhole",
-              },
-            ],
-          },
-        ],
-      },
-    },
-  }
-
-  return <WormholeConnect config={wormholeConfig} />
+  },
 }
 
 export default function Home() {
@@ -278,7 +250,7 @@ export default function Home() {
           </div>
 
           <div className="overflow-hidden rounded-2xl border border-border bg-card shadow-xl">
-            <WormholeConnectWrapper />
+            <WormholeConnect config={wormholeConfig} />
           </div>
         </div>
       </section>
